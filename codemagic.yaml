@@ -4,23 +4,19 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
-      android:
-        build_tools: 33.0.0
-        sdk: 33
+      vars:
+        GOOGLE_PLAY_SERVICE_ACCOUNT: Encrypted(...)
     scripts:
       - name: Install dependencies
         script: flutter pub get
-      - name: Analyze code
-        script: flutter analyze
       - name: Run tests
         script: flutter test
-      - name: Build APK (release)
+      - name: Build release APK
         script: flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
     publishing:
-      email:
-        recipients:
-          - "your-email@example.com"
-        on_success: always
-        on_failure: always
+      google_play:
+        track: internal
+        service_account_credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT
+
